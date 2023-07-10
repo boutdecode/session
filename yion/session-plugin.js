@@ -1,4 +1,5 @@
 const { randomUUID } = require('node:crypto')
+
 const sessions = {}
 
 const startSession = (req, res) => {
@@ -26,16 +27,6 @@ const startSession = (req, res) => {
 
     clearFlash () {
       this.flashMessages = {}
-    },
-
-    destroy () {
-      delete sessions[req.sessionId]
-
-      res.set('Set-Cookie', `session=${req.sessionId}; Max-Age=-1`)
-    },
-
-    keep (time = (24 * 60 * 60)) {
-      res.set('Set-Cookie', `session=${req.sessionId}; Max-Age=${time}; Path=/; SameSite=Strict; Secure; HttpOnly`)
     }
   }
 
@@ -54,10 +45,20 @@ module.exports = {
   type: 'session',
   handle: (req, res, app, next) => {
     const cookie = parseSessionCookie(req.headers.cookie || '')
-    if (cookie) {
+    if (cookie && sessions[cookie]) {
       req.session = sessions[cookie]
     } else {
-      startSession(req, res, {})
+      startSession(req, res)
+    }
+
+    req.session.destroy = () => {
+      delete sessions[req.session.id]
+
+      res.set('Set-Cookie', `session=${req.session.id}; Max-Age=-1`)
+    }
+
+    req.session.keep = (time = (24 * 60 * 60)) => {
+      res.set('Set-Cookie', `session=${req.session.id}; Max-Age=${time}; Path=/; SameSite=Strict; Secure; HttpOnly`)
     }
 
     next()

@@ -36,7 +36,7 @@ const startSession = (req, res) => {
 
     keep (time = (24 * 60 * 60)) {
       res.set('Set-Cookie', `session=${req.sessionId}; Max-Age=${time}; Path=/; SameSite=Strict; Secure; HttpOnly`)
-    },
+    }
   }
 
   res.set('Set-Cookie', `session=${req.sessionId}; Path=/; SameSite=Strict; Secure; HttpOnly`)

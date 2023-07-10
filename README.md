@@ -1,4 +1,6 @@
-# Session lib
+# Session lib by [boutdecode](https://boutdecode.fr)
+
+![https://boutdecode.fr/img/logo.png](https://boutdecode.fr/img/logo.png)
 
 ## Installation
 
@@ -37,4 +39,10 @@ app.get('/admin', (req, res) => {
 })
 
 server.listen(8080)
+```
+
+## Tests
+
+```shell
+$ npm run test
 ```
